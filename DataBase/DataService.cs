@@ -33,11 +33,44 @@ public class Service
     {
         MySqlCommand command = new MySqlCommand(query,Config.conn);
 
+        Config.conn.Open();
+        object ScalarObj = command.ExecuteScalar();
+        int i = Convert.ToInt32(ScalarObj);
+        Config.conn.Close();
+        return i;
+    }
+    public static int SqlScalarClass(string query,UserClass User)
+    {
+        MySqlCommand command = new MySqlCommand(query,Config.conn);
+
+        command.Parameters.AddWithValue("@id",User.Id);
+        command.Parameters.AddWithValue("@Email",User.Email);
+        command.Parameters.AddWithValue("@Name",User.Name);
+        command.Parameters.AddWithValue("@Password",User.Password);
+        command.Parameters.AddWithValue("@Adress",User.Adress);
+        command.Parameters.AddWithValue("@PhoneNumber",User.PhoneNumber);
+        command.Parameters.AddWithValue("@BirthDate",User.BirthDate);
 
         Config.conn.Open();
         object ScalarObj = command.ExecuteScalar();
         int i = Convert.ToInt32(ScalarObj);
         Config.conn.Close();
         return i;
+    }
+    public static UserClass SqlReadClass()
+    {
+        MySqlCommand command = new MySqlCommand();
+        MySqlDataReader reader = command.ExecuteReader();
+
+        Config.conn.Open();
+
+        UserClass user = new UserClass();
+        while (reader.Read())
+        {
+            user.Email = Convert.ToString(reader["Email"]);
+            user.Password = Convert.ToString(reader["Password"]);
+        }
+        Config.conn.Close();
+        return user;
     }
 }

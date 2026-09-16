@@ -8,10 +8,18 @@ namespace E_CommerceApi.Controllers;
 [Route("api/[controller]")]
 public class ECAPIController : ControllerBase
 {
-    [HttpGet]
+    [HttpPost("{LogIn}")]
     public IActionResult LogIn(UserClass user)
     {
-        return Ok();
+        var result = CommerceService.LogIn(user);
+        if (result.success)
+        {
+            return Ok(result.user);
+        }
+        else
+        {
+            return NotFound();
+        }
     }
     [HttpPost]
     public IActionResult CreateUser(UserClass user)
