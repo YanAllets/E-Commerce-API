@@ -3,6 +3,7 @@ using ECAPI.Models;
 namespace ECAPI.CommerceService;
 public class CommerceService
 {
+    public List<UserClass> Karts = new List<UserClass>();
     public static (bool success,object user) LogIn(UserClass user)
     {
         string query = "select count(id) from users where Email = @Email and Password = @Password;";
