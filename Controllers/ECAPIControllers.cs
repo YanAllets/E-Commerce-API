@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ECAPI.Models;
 using ECAPI.CommerceService;
+using System.Diagnostics.CodeAnalysis;
 namespace E_CommerceApi.Controllers;
 
 
@@ -8,19 +9,25 @@ namespace E_CommerceApi.Controllers;
 [Route("api/[controller]")]
 public class ECAPIController : ControllerBase
 {
-    [HttpPost("{LogIn}")]
+    [HttpPost("Login")]
     public IActionResult LogIn(UserClass user)
     {
         var result = CommerceService.LogIn(user);
-        if (result.success)
+        if (result.success == true && result.user != null)
         {
             return Ok(result.user);
         }
-        else
+        else if (result.success == false && result.user != null)
         {
-            return NotFound();
+            return NotFound("Wrong Password");
         }
+        else if(result.success == false && result.user == null)
+        {
+            return NotFound("This email in non registered");
+        }
+        return NotFound();
     }
+    
     [HttpPost]
     public IActionResult CreateUser(UserClass user)
     {

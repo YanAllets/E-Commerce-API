@@ -6,15 +6,27 @@ public class CommerceService
     public List<UserClass> Karts = new List<UserClass>();
     public static (bool success,object user) LogIn(UserClass user)
     {
-        string query = "select count(id) from users where Email = @Email and Password = @Password;";
-        int sucess = DataBase.Service.SqlScalarClass(query,user);
-        if(sucess == 1 )
+        string queryEmail = "select count(id) from users where Email = @Email;";
+        string queryPassword = "select count(id) from users where Email = @Email and Password = @Password;";
+
+        int success1 = DataBase.Service.SqlScalarClass(queryEmail,user);
+        int success2 = DataBase.Service.SqlScalarClass(queryPassword,user);
+        int success = success1 + success2;
+
+        if(success >= 1 )
         {
-            return (true,user);
+            if (success == 2)
+            {                
+                return (true,user);
+            }
+            else
+            {
+                return (false,user);
+            }
         }
         else
         {
-        return (false,null);
+            return (false,null);
         }
     }
     public static bool SingUp(UserClass user)
