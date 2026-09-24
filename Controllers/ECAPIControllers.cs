@@ -34,4 +34,16 @@ public class ECAPIController : ControllerBase
         CommerceService.SingUp(user);
         return Ok("deu bom");
     }
+    [HttpPost("CreateProduct")]
+    public IActionResult CreateProduct(ProductClass product)
+    {
+        CommerceService.CreateProduct(product);
+        return Ok("ok");
+    }
+    [HttpPost("CreateStore")]
+    public IActionResult CreateStore(StoreClass store)
+    {
+        CommerceService.CreateStore(store);
+        return Ok("ok");
+    }
 }

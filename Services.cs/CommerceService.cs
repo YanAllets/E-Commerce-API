@@ -35,5 +35,17 @@ public class CommerceService
         DataBase.Service.NonSqlQueryClass(query,user);
         return true;
     }
+    public static bool CreateProduct(ProductClass product)
+    {
+        string query = "insert into products (Name, Value, Store, Description, Reviews,Discount) Values (@Name, @Value, @Store, @Description, @Reviews, @Discount)";
+        DataBase.Service.NonSqlQueryClass(query,product);
+        return true;
+    }
+    public static bool CreateStore(StoreClass store)
+    {
+        string query = "insert into stores (Name, Owner, Balance) Values (@Name, @Owner, @Balance)";
+        DataBase.Service.NonSqlQueryClass(query,store);
+        return true;
+    }
 
 }

@@ -13,17 +13,33 @@ public class Service
         command.ExecuteNonQuery();
         Config.conn.Close();
     }
-    public static void NonSqlQueryClass(string query,UserClass User)
+    public static void NonSqlQueryClass(string query, object obj)
     {
         MySqlCommand command = new MySqlCommand(query,Config.conn);
 
-        command.Parameters.AddWithValue("@id",User.Id);
-        command.Parameters.AddWithValue("@Email",User.Email);
-        command.Parameters.AddWithValue("@Name",User.Name);
-        command.Parameters.AddWithValue("@Password",User.Password);
-        command.Parameters.AddWithValue("@Adress",User.Adress);
-        command.Parameters.AddWithValue("@PhoneNumber",User.PhoneNumber);
-        command.Parameters.AddWithValue("@BirthDate",User.BirthDate);
+        if (obj is UserClass user)
+        {
+            command.Parameters.AddWithValue("@id",user.Id);
+            command.Parameters.AddWithValue("@Email",user.Email);
+            command.Parameters.AddWithValue("@Name",user.Name);
+            command.Parameters.AddWithValue("@Password",user.Password);
+            command.Parameters.AddWithValue("@Adress",user.Adress);
+            command.Parameters.AddWithValue("@PhoneNumber",user.PhoneNumber);
+            command.Parameters.AddWithValue("@BirthDate",user.BirthDate);
+        }else if (obj is ProductClass product)
+        {
+            command.Parameters.AddWithValue("@Name",product.Name);
+            command.Parameters.AddWithValue("@Value",product.Value);
+            command.Parameters.AddWithValue("@Store",product.Store);
+            command.Parameters.AddWithValue("@Description",product.Description);
+            command.Parameters.AddWithValue("@Reviews",product.Reviews);
+            command.Parameters.AddWithValue("@Discount",product.Discount);
+        }else if (obj is StoreClass store)
+        {
+            command.Parameters.AddWithValue("@Name",store.Name);
+            command.Parameters.AddWithValue("@Owner",store.Owner);
+            command.Parameters.AddWithValue("@Balance",store.Balance);
+        }
 
         Config.conn.Open();
         command.ExecuteNonQuery();
