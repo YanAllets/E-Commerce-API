@@ -43,9 +43,17 @@ public class CommerceService
     }
     public static bool CreateStore(StoreClass store)
     {
-        string query = "insert into stores (Name, Owner, Balance) Values (@Name, @Owner, @Balance)";
-        DataBase.Service.NonSqlQueryClass(query,store);
+        string queryStore = "insert into stores (Name, Owner, Balance) Values (@Name, @Owner, @Balance);";
+        string queryStock = "create table @Store_Stock(ProductId int primary key,Amount Int,Value decimal,Discount decimal);";
+        
+
+        DataBase.Service.NonSqlQueryClass(queryStore,store);
+        DataBase.Service.NonSqlQueryClass(queryStock,store);
         return true;
+    }
+    public static void AddToKart()
+    {
+        
     }
 
 }
