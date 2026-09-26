@@ -29,15 +29,14 @@ public class Service
         }else if (obj is ProductClass product)
         {
             command.Parameters.AddWithValue("@Name",product.Name);
-            command.Parameters.AddWithValue("@Value",product.Value);
-            command.Parameters.AddWithValue("@Store",product.Store);
+            command.Parameters.AddWithValue("@Brand",product.Brand);
+            command.Parameters.AddWithValue("@Model",product.Model);
+            command.Parameters.AddWithValue("@Barcode",product.Barcode);
             command.Parameters.AddWithValue("@Description",product.Description);
-            command.Parameters.AddWithValue("@Reviews",product.Reviews);
-            command.Parameters.AddWithValue("@Discount",product.Discount);
         }else if (obj is StoreClass store)
         {
             command.Parameters.AddWithValue("@Name",store.Name);
-            command.Parameters.AddWithValue("@Owner",store.Owner);
+            command.Parameters.AddWithValue("@OwnerId",store.OwnerId);
             command.Parameters.AddWithValue("@Balance",store.Balance);
         }
 

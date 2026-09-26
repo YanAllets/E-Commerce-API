@@ -2,9 +2,11 @@ namespace ECAPI.Models;
 
 public class AdvertisementClass
 {
-    public string Name { get; set; }
+    public int Id { get; set; }
+    public int ProductId { get; set; }
+    public int StoreId { get; set; }
     public decimal Price { get; set; }
-    public string Description { get; set; }
     public decimal Discount { get; set; }
-    public UserClass Owner { get; set; }
+    public int StockQuantity { get; set; }
+    public string Description { get; set; }
 }

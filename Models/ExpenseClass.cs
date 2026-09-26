@@ -6,5 +6,5 @@ public class ExpenseClass
     public decimal Value { get; set; }
     public int Installments { get; set; }
     public DateTime Date { get; set; }
-    public ProductClass Product { get; set; }
+    public ProductClass ProductId { get; set; }
 }

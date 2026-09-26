@@ -2,10 +2,10 @@ namespace ECAPI.Models;
 
 public class ProductClass
 {
-    public string Name { get; set; }
-    public decimal Value { get; set; }
-    public string Store { get; set; }
+    public int Id { get; set; }
+    public decimal Name { get; set; }
+    public string Brand { get; set; }
+    public string Model { get; set; }
+    public string Barcode { get; set; }
     public string Description { get; set; }
-    public string Reviews { get; set; }
-    public decimal Discount { get; set; }
 }

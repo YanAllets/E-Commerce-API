@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ECAPI.Models;
 using ECAPI.CommerceService;
-using System.Diagnostics.CodeAnalysis;
+using ECAPI.StoreService;
 namespace E_CommerceApi.Controllers;
 
 
@@ -35,9 +35,9 @@ public class ECAPIController : ControllerBase
         return Ok("deu bom");
     }
     [HttpPost("CreateProduct")]
-    public IActionResult CreateProduct(ProductClass product)
+    public IActionResult CreateProduct(ProductClass product,string Barcode)
     {
-        CommerceService.CreateProduct(product);
+        StoreService.CreateAd(product,Barcode);
         return Ok("ok");
     }
     [HttpPost("CreateStore")]
