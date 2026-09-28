@@ -28,16 +28,16 @@ public class ECAPIController : ControllerBase
         return NotFound();
     }
     
-    [HttpPost]
+    [HttpPost("SingUp")]
     public IActionResult CreateUser(UserClass user)
     {
         CommerceService.SingUp(user);
         return Ok("deu bom");
     }
     [HttpPost("CreateProduct")]
-    public IActionResult CreateProduct(ProductClass product,string Barcode)
+    public IActionResult CreateProduct(ProductClass product)
     {
-        StoreService.CreateAd(product,Barcode);
+        StoreService.CreateProduct(product);
         return Ok("ok");
     }
     [HttpPost("CreateStore")]
@@ -45,5 +45,18 @@ public class ECAPIController : ControllerBase
     {
         CommerceService.CreateStore(store);
         return Ok("ok");
+    }
+    [HttpPost("CreateAd")]
+    public IActionResult CreateAd(AdvertisementClass ad)
+    {
+        var result = StoreService.CreateAd(ad);
+        if(result.success)
+        {
+            return Ok("ok");
+        }
+        else
+        {
+            return NotFound(result.message);
+        }
     }
 }

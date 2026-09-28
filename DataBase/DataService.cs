@@ -38,6 +38,15 @@ public class Service
             command.Parameters.AddWithValue("@Name",store.Name);
             command.Parameters.AddWithValue("@OwnerId",store.OwnerId);
             command.Parameters.AddWithValue("@Balance",store.Balance);
+        }else if (obj is AdvertisementClass Ad)
+        {
+            command.Parameters.AddWithValue("@Id",Ad.Id);
+            command.Parameters.AddWithValue("@ProductId",Ad.ProductId);
+            command.Parameters.AddWithValue("@StoreId",Ad.StoreId);
+            command.Parameters.AddWithValue("@Price",Ad.Price);
+            command.Parameters.AddWithValue("@Discount",Ad.Discount);
+            command.Parameters.AddWithValue("@StockQuantity",Ad.StockQuantity);
+            command.Parameters.AddWithValue("@Description",Ad.Description);
         }
 
         Config.conn.Open();
@@ -54,17 +63,29 @@ public class Service
         Config.conn.Close();
         return i;
     }
-    public static int SqlScalarClass(string query,UserClass User)
+    public static int SqlScalarClass(string query,object obj)
     {
         MySqlCommand command = new MySqlCommand(query,Config.conn);
 
-        command.Parameters.AddWithValue("@id",User.Id);
-        command.Parameters.AddWithValue("@Email",User.Email);
-        command.Parameters.AddWithValue("@Name",User.Name);
-        command.Parameters.AddWithValue("@Password",User.Password);
-        command.Parameters.AddWithValue("@Adress",User.Adress);
-        command.Parameters.AddWithValue("@PhoneNumber",User.PhoneNumber);
-        command.Parameters.AddWithValue("@BirthDate",User.BirthDate);
+        if(obj is UserClass User)
+        {
+            command.Parameters.AddWithValue("@id",User.Id);
+            command.Parameters.AddWithValue("@Email",User.Email);
+            command.Parameters.AddWithValue("@Name",User.Name);
+            command.Parameters.AddWithValue("@Password",User.Password);
+            command.Parameters.AddWithValue("@Adress",User.Adress);
+            command.Parameters.AddWithValue("@PhoneNumber",User.PhoneNumber);
+            command.Parameters.AddWithValue("@BirthDate",User.BirthDate);
+        }else if (obj is AdvertisementClass Ad)
+        {
+            command.Parameters.AddWithValue("@Id",Ad.Id);
+            command.Parameters.AddWithValue("@ProductId",Ad.ProductId);
+            command.Parameters.AddWithValue("@StoreId",Ad.StoreId);
+            command.Parameters.AddWithValue("@Price",Ad.Price);
+            command.Parameters.AddWithValue("@Discount",Ad.Discount);
+            command.Parameters.AddWithValue("@StockQuantity",Ad.StockQuantity);
+            command.Parameters.AddWithValue("@Description",Ad.Description);
+        }
 
         Config.conn.Open();
         object ScalarObj = command.ExecuteScalar();
