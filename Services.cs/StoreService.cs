@@ -6,7 +6,7 @@ public class StoreService
 {
     public static bool CreateProduct(ProductClass product)
     {
-        string queryAddProduct = "insert into products values(@Id,@Name,@Brand,@Model,@Barcode,@Description)";
+        string queryAddProduct = "insert into products (Name, Brand, Model, Barcode, Description) values (@Name,@Brand,@Model,@Barcode,@Description)";
         DataBase.Service.NonSqlQueryClass(queryAddProduct,product);
         return true;
     }

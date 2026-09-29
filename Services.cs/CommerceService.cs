@@ -35,15 +35,36 @@ public class CommerceService
         DataBase.Service.NonSqlQueryClass(query,user);
         return true;
     }
+    public static void AddToKart(int AdId)
+    {
+        
+    }
     public static bool CreateStore(StoreClass store)
     {
         string queryStore = "insert into stores (Name, OwnerId, Balance) Values (@Name, @OwnerId, @Balance);";
         DataBase.Service.NonSqlQueryClass(queryStore,store);
         return true;
     }
-    public static void AddToKart()
+    public static bool ThisExistClass(object obj)
     {
-        
+        int i = 0;
+        if (obj is AdvertisementClass)
+        {
+            string queryAd = "select count(id) from advertisements where Id = @Id";
+            i =+ DataBase.Service.SqlScalarClass(queryAd,obj);
+        }else if (obj is ProductClass)
+        {
+            string queryProd = "select count(id) from products where Id = @Id";
+            i =+ DataBase.Service.SqlScalarClass(queryProd,obj);
+        }
+        if (i == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }
