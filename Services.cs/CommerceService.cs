@@ -3,7 +3,6 @@ using ECAPI.Models;
 namespace ECAPI.CommerceService;
 public class CommerceService
 {
-    public List<AdvertisementClass> Karts = new List<AdvertisementClass>();
     public static (bool success,object user) LogIn(UserClass user)
     {
         string queryEmail = "select count(id) from users where Email = @Email;";
@@ -35,9 +34,23 @@ public class CommerceService
         DataBase.Service.NonSqlQueryClass(query,user);
         return true;
     }
-    public static void AddToKart(int AdId)
+    public static void AddToCart(int AdId,int quantity,int cartId)
     {
-        
+        if (ThisExist(AdId))
+        {
+            string queryAd = $"select * from advertisements where id = {AdId}";
+            string query = $"insert into cartitem (CartId, AdvertisementId, Quantity) values (@CartId, @AdvertisementId, @Quantity);";
+
+            AdvertisementClass ad = DataBase.Service.SqlReadAd(queryAd);
+
+            CartItemClass cartItem = new CartItemClass()
+            {
+                CartId = cartId,
+                AdvertisementId = ad.Id,
+                Quantity = quantity
+            };
+            DataBase.Service.NonSqlQueryClass(query,cartItem);
+        }
     }
     public static bool CreateStore(StoreClass store)
     {
@@ -45,18 +58,10 @@ public class CommerceService
         DataBase.Service.NonSqlQueryClass(queryStore,store);
         return true;
     }
-    public static bool ThisExistClass(object obj)
+    public static bool ThisExist(int adId)
     {
-        int i = 0;
-        if (obj is AdvertisementClass)
-        {
-            string queryAd = "select count(id) from advertisements where Id = @Id";
-            i =+ DataBase.Service.SqlScalarClass(queryAd,obj);
-        }else if (obj is ProductClass)
-        {
-            string queryProd = "select count(id) from products where Id = @Id";
-            i =+ DataBase.Service.SqlScalarClass(queryProd,obj);
-        }
+        string queryAd = $"select count(id) from advertisements where Id = {adId}";
+        int i = DataBase.Service.SqlScalar(queryAd);
         if (i == 1)
         {
             return true;

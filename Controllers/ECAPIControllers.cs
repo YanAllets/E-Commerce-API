@@ -10,9 +10,9 @@ namespace E_CommerceApi.Controllers;
 public class ECAPIController : ControllerBase
 {
     [HttpPost("Login")]
-    public IActionResult LogIn(UserClass user)
+    public IActionResult LogIn(UserClass User)
     {
-        var result = CommerceService.LogIn(user);
+        var result = CommerceService.LogIn(User);
         if (result.success == true && result.user != null)
         {
             return Ok(result.user);
@@ -29,27 +29,27 @@ public class ECAPIController : ControllerBase
     }
     
     [HttpPost("SingUp")]
-    public IActionResult CreateUser(UserClass user)
+    public IActionResult CreateUser(UserClass User)
     {
-        CommerceService.SingUp(user);
+        CommerceService.SingUp(User);
         return Ok("deu bom");
     }
     [HttpPost("CreateProduct")]
-    public IActionResult CreateProduct(ProductClass product)
+    public IActionResult CreateProduct(ProductClass Product)
     {
-        StoreService.CreateProduct(product);
+        StoreService.CreateProduct(Product);
         return Ok("ok");
     }
     [HttpPost("CreateStore")]
-    public IActionResult CreateStore(StoreClass store)
+    public IActionResult CreateStore(StoreClass Store)
     {
-        CommerceService.CreateStore(store);
+        CommerceService.CreateStore(Store);
         return Ok("ok");
     }
     [HttpPost("CreateAd")]
-    public IActionResult CreateAd(AdvertisementClass ad)
+    public IActionResult CreateAd(AdvertisementClass Ad)
     {
-        var result = StoreService.CreateAd(ad);
+        var result = StoreService.CreateAd(Ad);
         if(result.success)
         {
             return Ok("ok");
@@ -58,5 +58,11 @@ public class ECAPIController : ControllerBase
         {
             return NotFound(result.message);
         }
+    }
+    [HttpPost("AddToCart")]
+    public IActionResult AddToCart(int AdId,int quantity,int cartId)
+    {
+        CommerceService.AddToCart(AdId,quantity,cartId);
+        return Ok();
     }
 }

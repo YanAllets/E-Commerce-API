@@ -47,6 +47,12 @@ public class Service
             command.Parameters.AddWithValue("@Discount",Ad.Discount);
             command.Parameters.AddWithValue("@StockQuantity",Ad.StockQuantity);
             command.Parameters.AddWithValue("@Description",Ad.Description);
+        }else if (obj is CartItemClass cartItem)
+        {
+            command.Parameters.AddWithValue("@Id",cartItem.Id);
+            command.Parameters.AddWithValue("@CartId",cartItem.CartId);
+            command.Parameters.AddWithValue("@AdvertisementId",cartItem.AdvertisementId);
+            command.Parameters.AddWithValue("@Quantity",cartItem.Quantity);
         }
 
         Config.conn.Open();
@@ -93,14 +99,13 @@ public class Service
         Config.conn.Close();
         return i;
     }
-    public static UserClass SqlReadClass()
+    public static UserClass SqlReadUser()
     {
         MySqlCommand command = new MySqlCommand();
-        MySqlDataReader reader = command.ExecuteReader();
 
         Config.conn.Open();
-
         UserClass user = new UserClass();
+        MySqlDataReader reader = command.ExecuteReader();
         while (reader.Read())
         {
             user.Email = Convert.ToString(reader["Email"]);
@@ -108,5 +113,27 @@ public class Service
         }
         Config.conn.Close();
         return user;
+    }
+    public static AdvertisementClass SqlReadAd(string query)
+    {
+        MySqlCommand command = new MySqlCommand(query,Config.conn);
+
+        Config.conn.Open();
+
+        AdvertisementClass ad = new AdvertisementClass();
+        MySqlDataReader reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            ad.Id = Convert.ToInt32(reader["Id"]);
+            ad.ProductId = Convert.ToInt32(reader["ProductId"]);
+            ad.StoreId = Convert.ToInt32(reader["StoreId"]);
+            ad.Price = Convert.ToDecimal(reader["Price"]);
+            ad.Discount = Convert.ToDecimal(reader["Discount"]);
+            ad.StockQuantity = Convert.ToInt32(reader["StockQuantity"]);
+            ad.Description = Convert.ToString(reader["Description"]);
+        }
+
+        Config.conn.Close();
+        return ad;
     }
 }
