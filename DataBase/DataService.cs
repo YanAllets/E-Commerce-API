@@ -136,4 +136,23 @@ public class Service
         Config.conn.Close();
         return ad;
     }
+    public static CartItemClass SqlReadCartItem(string query)
+    {
+        MySqlCommand command = new MySqlCommand(query,Config.conn);
+
+        Config.conn.Open();
+
+        CartItemClass cartitem = new CartItemClass();
+        MySqlDataReader reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            cartitem.Id = Convert.ToInt32(reader["Id"]);
+            cartitem.CartId = Convert.ToInt32(reader["CartId"]);
+            cartitem.AdvertisementId = Convert.ToInt32(reader["AdvertisementId"]);
+            cartitem.Quantity = Convert.ToInt32(reader["Quantity"]);
+        }
+
+        Config.conn.Close();
+        return cartitem;
+    }
 }

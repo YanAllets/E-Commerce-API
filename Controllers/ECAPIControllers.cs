@@ -65,4 +65,10 @@ public class ECAPIController : ControllerBase
         CommerceService.AddToCart(AdId,quantity,cartId);
         return Ok();
     }
+    [HttpPost("RemoveFromCart")]
+    public IActionResult RemoveFromCart(int AdId,int quantity,int cartId)
+    {
+        CommerceService.RemoveFromCart(quantity,cartId,AdId);
+        return Ok();
+    }
 }

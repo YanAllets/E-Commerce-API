@@ -52,6 +52,23 @@ public class CommerceService
             DataBase.Service.NonSqlQueryClass(query,cartItem);
         }
     }
+    public static void RemoveFromCart(int quantity,int cartId,int AdId)
+    {
+        string queryRead = $"select * from cartitem where CartId = {cartId} and AdvertisementId = {AdId};";
+        string query = $"update cartitem set quantity = quantity - {quantity} where CartId = {cartId} and AdvertisementId = {AdId};";
+        string queryDelete = $"DELETE FROM cartitem WHERE CartId = {cartId} and AdvertisementId = {AdId};";
+
+        CartItemClass cartItem = DataBase.Service.SqlReadCartItem(queryRead);
+
+        if(cartItem.Quantity <= 0)
+        {
+            DataBase.Service.NonSqlQuery(queryDelete);
+        }
+        else
+        {
+            DataBase.Service.NonSqlQuery(query);
+        }
+    }
     public static bool CreateStore(StoreClass store)
     {
         string queryStore = "insert into stores (Name, OwnerId, Balance) Values (@Name, @OwnerId, @Balance);";
