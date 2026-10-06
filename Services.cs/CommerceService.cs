@@ -34,23 +34,39 @@ public class CommerceService
         DataBase.Service.NonSqlQueryClass(query,user);
         return true;
     }
-    public static void AddToCart(int AdId,int quantity,int cartId)
+    public static bool AddToCart(int AdId,int quantity,int cartId)
     {
         if (ThisExist(AdId))
         {
             string queryAd = $"select * from advertisements where id = {AdId}";
+            string queryRead = $"select * from cartitem where CartId = {cartId} and AdvertisementId = {AdId};";
             string query = $"insert into cartitem (CartId, AdvertisementId, Quantity) values (@CartId, @AdvertisementId, @Quantity);";
+            string queryEqual = $"select count(id) from cartitem where CartId = {cartId} and AdvertisementId = {AdId};";
+            string queryUpdate = $"update cartitem set Id = @Id, CartId = @CartId, AdvertisementId = @AdvertisementId, Quantity = @Quantity where CartId = @CartId and AdvertisementId = @AdvertisementId";
 
+            CartItemClass cartItemDB = DataBase.Service.SqlReadCartItem(queryRead);
             AdvertisementClass ad = DataBase.Service.SqlReadAd(queryAd);
 
-            CartItemClass cartItem = new CartItemClass()
+            CartItemClass cartItemOutput = new CartItemClass()
             {
                 CartId = cartId,
                 AdvertisementId = ad.Id,
-                Quantity = quantity
+                Quantity = cartItemDB.Quantity + quantity
             };
-            DataBase.Service.NonSqlQueryClass(query,cartItem);
+
+            int i = DataBase.Service.SqlScalar(queryEqual);
+            if (i != 1)
+            {    
+                DataBase.Service.NonSqlQueryClass(query,cartItemOutput);
+                return true;
+            }
+            else if(i == 1)
+            {
+                DataBase.Service.NonSqlQueryClass(queryUpdate,cartItemOutput);
+                return false;
+            }
         }
+        return false;
     }
     public static void RemoveFromCart(int quantity,int cartId,int AdId)
     {
@@ -88,5 +104,10 @@ public class CommerceService
             return false;
         }
     }
-
+    public static void Buy(int cartId)
+    {
+        string querySum = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = {cartId};";
+        int value = DataBase.Service.SqlScalar(querySum);
+        string querya = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = 1 group by StoreId;";
+    }
 }
