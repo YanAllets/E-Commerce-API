@@ -71,4 +71,9 @@ public class ECAPIController : ControllerBase
         CommerceService.RemoveFromCart(quantity,cartId,AdId);
         return Ok();
     }
+    [HttpPost("Buy")]
+    public IActionResult Buy(int cartId)
+    {
+        return Ok(CommerceService.Buy(cartId));
+    }
 }

@@ -53,6 +53,9 @@ public class Service
             command.Parameters.AddWithValue("@CartId",cartItem.CartId);
             command.Parameters.AddWithValue("@AdvertisementId",cartItem.AdvertisementId);
             command.Parameters.AddWithValue("@Quantity",cartItem.Quantity);
+        }else if (obj is CartClass cart)
+        {
+            command.Parameters.AddWithValue("@CartId",cart.Id);
         }
 
         Config.conn.Open();
@@ -154,5 +157,10 @@ public class Service
 
         Config.conn.Close();
         return cartitem;
+    }
+    public static void sqlReadValue(string query)
+    {
+        MySqlCommand command = new MySqlCommand(query,Config.conn);
+
     }
 }

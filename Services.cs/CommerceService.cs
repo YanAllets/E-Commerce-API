@@ -104,10 +104,20 @@ public class CommerceService
             return false;
         }
     }
-    public static void Buy(int cartId)
+    public static decimal Buy(int cartId)
     {
-        string querySum = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = {cartId};";
-        int value = DataBase.Service.SqlScalar(querySum);
-        string querya = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = 1 group by StoreId;";
+        CartClass cart = new CartClass()
+        {
+            Id = cartId
+        };
+        string queryTotal = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId;";
+        string queryBuy = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId group by StoreId;";
+        string queryClearCart = "delete from cartitem where CartId = @CartId";
+        
+        decimal value = DataBase.Service.SqlScalar(queryTotal);
+        DataBase.Service.NonSqlQueryClass(queryBuy,cart);
+        DataBase.Service.NonSqlQueryClass(queryClearCart,cart);
+
+        return value;
     }
 }
