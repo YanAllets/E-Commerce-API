@@ -113,17 +113,37 @@ public class Service
         Config.conn.Close();
         return i;
     }
-    public static UserClass SqlReadUser()
+    public static UserClass SqlReadUser(string query)
     {
-        MySqlCommand command = new MySqlCommand();
+        MySqlCommand command = new MySqlCommand(query,Config.conn);
 
         Config.conn.Open();
         UserClass user = new UserClass();
         MySqlDataReader reader = command.ExecuteReader();
         while (reader.Read())
         {
+            user.Id = Convert.ToInt32(reader["Id"]);
             user.Email = Convert.ToString(reader["Email"]);
+            user.Name = Convert.ToString(reader["Name"]);
             user.Password = Convert.ToString(reader["Password"]);
+            user.Adress = Convert.ToString(reader["Adress"]);
+            user.PhoneNumber = Convert.ToString(reader["PhoneNumber"]);
+            user.BirthDate = Convert.ToDateTime(reader["BirthDate"]);
+        }
+        Config.conn.Close();
+        return user;
+    }
+    public static UserClass SqlReadUser2(string query)
+    {
+        MySqlCommand command = new MySqlCommand(query,Config.conn);
+
+        Config.conn.Open();
+        UserClass user = new UserClass();
+        MySqlDataReader reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            user.Id = Convert.ToInt32(reader["Id"]);
+            user.PhoneNumber = Convert.ToString(reader["PhoneNumber"]);
         }
         Config.conn.Close();
         return user;

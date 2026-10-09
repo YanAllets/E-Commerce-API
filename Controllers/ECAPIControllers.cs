@@ -72,8 +72,8 @@ public class ECAPIController : ControllerBase
         return Ok();
     }
     [HttpPost("Buy")]
-    public IActionResult Buy(int cartId)
+    public IActionResult Buy(int cartId,string paymentMethod,int installments)
     {
-        return Ok(CommerceService.Buy(cartId));
+        return Ok(CommerceService.Buy(cartId,paymentMethod,installments));
     }
 }

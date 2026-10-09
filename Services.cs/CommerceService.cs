@@ -1,4 +1,5 @@
 using ECAPI.Models;
+using ECAPI.StoreService;
 
 namespace ECAPI.CommerceService;
 public class CommerceService
@@ -113,22 +114,29 @@ public class CommerceService
         string queryTotal = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId;";
         string queryBuy = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId group by StoreId;";
         string queryClearCart = "delete from cartitem where CartId = @CartId";
-        string queryRead = $"select UserId,PhoneNumber from users u join cart c on c.UserId = u.Id where c.Id = {cartId}";
-
+        string queryRead = $"select UserId as Id,PhoneNumber from users u join cart c on c.UserId = u.Id where c.Id = {cartId}";
 
         decimal Total = DataBase.Service.SqlScalarClass(queryTotal,cart);
-        DataBase.Service.SqlRead(queryRead,)
+        Console.WriteLine("1");
         DataBase.Service.NonSqlQueryClass(queryBuy,cart);
+        Console.WriteLine("2");
         DataBase.Service.NonSqlQueryClass(queryClearCart,cart);
+        Console.WriteLine("3");
 
+        UserClass user = DataBase.Service.SqlReadUser2(queryRead);
+        Console.WriteLine("4");
         ExpenseClass expense = new ExpenseClass()
         {
+            UserId = user.Id,
             Type = paymentMethod,
-            Installments = installments,
             Value = Total,
+            Installments = installments,
+            PhoneNumber = user.PhoneNumber,
             Date = DateTime.Now
         };
-
+        Console.WriteLine("5");
+        StoreService.StoreService.CreateExpense(expense);
+        Console.WriteLine("6");
         return Total;
     }
 }
