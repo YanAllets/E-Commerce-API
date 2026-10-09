@@ -28,4 +28,9 @@ public class StoreService
             return (false,errorMessage);
         }
     }
+    public static void CreateExpense(ExpenseClass expense)
+    {
+        string query = "insert into expenses (Id, UserId, advertisementsId, Type, Value, Installments, PhoneNumber, Date) values (@Id, @UserId, @advertisementsId, @Type, @Value, @Installments, @PhoneNumber, @Date);";
+        DataBase.Service.NonSqlQueryClass(query, expense);
+    }
 }

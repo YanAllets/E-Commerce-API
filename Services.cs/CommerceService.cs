@@ -104,7 +104,7 @@ public class CommerceService
             return false;
         }
     }
-    public static decimal Buy(int cartId)
+    public static decimal Buy(int cartId,string paymentMethod,int installments)
     {
         CartClass cart = new CartClass()
         {
@@ -113,11 +113,22 @@ public class CommerceService
         string queryTotal = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId;";
         string queryBuy = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId group by StoreId;";
         string queryClearCart = "delete from cartitem where CartId = @CartId";
-        
-        decimal value = DataBase.Service.SqlScalar(queryTotal);
+        string queryRead = $"select UserId,PhoneNumber from users u join cart c on c.UserId = u.Id where c.Id = {cartId}";
+
+
+        decimal Total = DataBase.Service.SqlScalarClass(queryTotal,cart);
+        DataBase.Service.SqlRead(queryRead,)
         DataBase.Service.NonSqlQueryClass(queryBuy,cart);
         DataBase.Service.NonSqlQueryClass(queryClearCart,cart);
 
-        return value;
+        ExpenseClass expense = new ExpenseClass()
+        {
+            Type = paymentMethod,
+            Installments = installments,
+            Value = Total,
+            Date = DateTime.Now
+        };
+
+        return Total;
     }
 }

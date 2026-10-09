@@ -56,6 +56,14 @@ public class Service
         }else if (obj is CartClass cart)
         {
             command.Parameters.AddWithValue("@CartId",cart.Id);
+        }else if(obj is ExpenseClass expense)
+        {
+            command.Parameters.AddWithValue("@UserId",expense.UserId);
+            command.Parameters.AddWithValue("@Type",expense.Type);
+            command.Parameters.AddWithValue("@Value",expense.Value);
+            command.Parameters.AddWithValue("@Installments",expense.Installments);
+            command.Parameters.AddWithValue("@PhoneNumber",expense.PhoneNumber);
+            command.Parameters.AddWithValue("@Date",expense.Date);
         }
 
         Config.conn.Open();
@@ -94,6 +102,9 @@ public class Service
             command.Parameters.AddWithValue("@Discount",Ad.Discount);
             command.Parameters.AddWithValue("@StockQuantity",Ad.StockQuantity);
             command.Parameters.AddWithValue("@Description",Ad.Description);
+        }else if (obj is CartClass cart)
+        {
+            command.Parameters.AddWithValue("@CartId",cart.Id);
         }
 
         Config.conn.Open();
@@ -161,6 +172,5 @@ public class Service
     public static void sqlReadValue(string query)
     {
         MySqlCommand command = new MySqlCommand(query,Config.conn);
-
     }
 }
