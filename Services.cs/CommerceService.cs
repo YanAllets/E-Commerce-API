@@ -117,14 +117,14 @@ public class CommerceService
         string queryRead = $"select UserId as Id,PhoneNumber from users u join cart c on c.UserId = u.Id where c.Id = {cartId}";
 
         decimal Total = DataBase.Service.SqlScalarClass(queryTotal,cart);
-        Console.WriteLine("1");
+        //Console.WriteLine("1");
         DataBase.Service.NonSqlQueryClass(queryBuy,cart);
-        Console.WriteLine("2");
+        //Console.WriteLine("2");
         DataBase.Service.NonSqlQueryClass(queryClearCart,cart);
-        Console.WriteLine("3");
+        //Console.WriteLine("3");
 
         UserClass user = DataBase.Service.SqlReadUser2(queryRead);
-        Console.WriteLine("4");
+        //Console.WriteLine("4");
         ExpenseClass expense = new ExpenseClass()
         {
             UserId = user.Id,
@@ -134,9 +134,14 @@ public class CommerceService
             PhoneNumber = user.PhoneNumber,
             Date = DateTime.Now
         };
-        Console.WriteLine("5");
+        //Console.WriteLine("5");
         StoreService.StoreService.CreateExpense(expense);
-        Console.WriteLine("6");
+        //Console.WriteLine("6");
         return Total;
+    }
+    public static void MakeReview(ReviewClass review)
+    {
+        string queryInsert = "insert into reviews (UserId, AdvertisementId, Rating, Comment, Date) values (@UserId, @AdvertisementId, @Rating, @Comment, @Date)";
+        DataBase.Service.NonSqlQueryClass(queryInsert,review);
     }
 }

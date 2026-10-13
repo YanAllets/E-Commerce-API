@@ -64,6 +64,14 @@ public class Service
             command.Parameters.AddWithValue("@Installments",expense.Installments);
             command.Parameters.AddWithValue("@PhoneNumber",expense.PhoneNumber);
             command.Parameters.AddWithValue("@Date",expense.Date);
+        }else if (obj is ReviewClass review)
+        {
+            command.Parameters.AddWithValue("@Id",review.Id);
+            command.Parameters.AddWithValue("@UserId",review.UserId);
+            command.Parameters.AddWithValue("@AdvertisementId",review.AdvertisementId);
+            command.Parameters.AddWithValue("@Rating",review.Rating);
+            command.Parameters.AddWithValue("@Comment",review.Comment);
+            command.Parameters.AddWithValue("@Date",review.Date);
         }
 
         Config.conn.Open();

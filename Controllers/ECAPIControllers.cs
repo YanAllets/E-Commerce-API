@@ -76,4 +76,10 @@ public class ECAPIController : ControllerBase
     {
         return Ok(CommerceService.Buy(cartId,paymentMethod,installments));
     }
+    [HttpPost("MakeReview")]
+    public IActionResult MakeReview(ReviewClass review)
+    {
+        CommerceService.MakeReview(review);
+        return Ok();
+    }
 }
