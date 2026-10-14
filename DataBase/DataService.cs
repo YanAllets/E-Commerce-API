@@ -56,14 +56,14 @@ public class Service
         }else if (obj is CartClass cart)
         {
             command.Parameters.AddWithValue("@CartId",cart.Id);
-        }else if(obj is ExpenseClass expense)
+        }else if(obj is OrderClass order)
         {
-            command.Parameters.AddWithValue("@UserId",expense.UserId);
-            command.Parameters.AddWithValue("@Type",expense.Type);
-            command.Parameters.AddWithValue("@Value",expense.Value);
-            command.Parameters.AddWithValue("@Installments",expense.Installments);
-            command.Parameters.AddWithValue("@PhoneNumber",expense.PhoneNumber);
-            command.Parameters.AddWithValue("@Date",expense.Date);
+            command.Parameters.AddWithValue("@UserId",order.UserId);
+            command.Parameters.AddWithValue("@Type",order.Type);
+            command.Parameters.AddWithValue("@Value",order.Value);
+            command.Parameters.AddWithValue("@Installments",order.Installments);
+            command.Parameters.AddWithValue("@PhoneNumber",order.PhoneNumber);
+            command.Parameters.AddWithValue("@Date",order.Date);
         }else if (obj is ReviewClass review)
         {
             command.Parameters.AddWithValue("@Id",review.Id);

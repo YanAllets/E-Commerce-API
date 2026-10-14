@@ -40,10 +40,10 @@ public class CommerceService
         if (ThisExist(AdId))
         {
             string queryAd = $"select * from advertisements where id = {AdId}";
-            string queryRead = $"select * from cartitem where CartId = {cartId} and AdvertisementId = {AdId};";
-            string query = $"insert into cartitem (CartId, AdvertisementId, Quantity) values (@CartId, @AdvertisementId, @Quantity);";
-            string queryEqual = $"select count(id) from cartitem where CartId = {cartId} and AdvertisementId = {AdId};";
-            string queryUpdate = $"update cartitem set Id = @Id, CartId = @CartId, AdvertisementId = @AdvertisementId, Quantity = @Quantity where CartId = @CartId and AdvertisementId = @AdvertisementId";
+            string queryRead = $"select * from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
+            string query = $"insert into cart_item (CartId, AdvertisementId, Quantity) values (@CartId, @AdvertisementId, @Quantity);";
+            string queryEqual = $"select count(id) from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
+            string queryUpdate = $"update cart_item set Id = @Id, CartId = @CartId, AdvertisementId = @AdvertisementId, Quantity = @Quantity where CartId = @CartId and AdvertisementId = @AdvertisementId";
 
             CartItemClass cartItemDB = DataBase.Service.SqlReadCartItem(queryRead);
             AdvertisementClass ad = DataBase.Service.SqlReadAd(queryAd);
@@ -71,9 +71,9 @@ public class CommerceService
     }
     public static void RemoveFromCart(int quantity,int cartId,int AdId)
     {
-        string queryRead = $"select * from cartitem where CartId = {cartId} and AdvertisementId = {AdId};";
-        string query = $"update cartitem set quantity = quantity - {quantity} where CartId = {cartId} and AdvertisementId = {AdId};";
-        string queryDelete = $"DELETE FROM cartitem WHERE CartId = {cartId} and AdvertisementId = {AdId};";
+        string queryRead = $"select * from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
+        string query = $"update cart_item set quantity = quantity - {quantity} where CartId = {cartId} and AdvertisementId = {AdId};";
+        string queryDelete = $"DELETE FROM cart_item WHERE CartId = {cartId} and AdvertisementId = {AdId};";
 
         CartItemClass cartItem = DataBase.Service.SqlReadCartItem(queryRead);
 
@@ -111,21 +111,20 @@ public class CommerceService
         {
             Id = cartId
         };
-        string queryTotal = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId;";
-        string queryBuy = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cartitem ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId group by StoreId;";
-        string queryClearCart = "delete from cartitem where CartId = @CartId";
+        string queryTotal = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cart_item ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId;";
+        string queryBuy = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cart_item ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId group by StoreId;";
+        string queryClearCart = "delete from cart_item where CartId = @CartId";
         string queryRead = $"select UserId as Id,PhoneNumber from users u join cart c on c.UserId = u.Id where c.Id = {cartId}";
 
         decimal Total = DataBase.Service.SqlScalarClass(queryTotal,cart);
         //Console.WriteLine("1");
         DataBase.Service.NonSqlQueryClass(queryBuy,cart);
         //Console.WriteLine("2");
-        DataBase.Service.NonSqlQueryClass(queryClearCart,cart);
         //Console.WriteLine("3");
 
         UserClass user = DataBase.Service.SqlReadUser2(queryRead);
         //Console.WriteLine("4");
-        ExpenseClass expense = new ExpenseClass()
+        OrderClass Order = new OrderClass()
         {
             UserId = user.Id,
             Type = paymentMethod,
@@ -135,8 +134,9 @@ public class CommerceService
             Date = DateTime.Now
         };
         //Console.WriteLine("5");
-        StoreService.StoreService.CreateExpense(expense);
+        StoreService.StoreService.CreateOrder(Order);
         //Console.WriteLine("6");
+        DataBase.Service.NonSqlQueryClass(queryClearCart,cart);
         return Total;
     }
     public static void MakeReview(ReviewClass review)

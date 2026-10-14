@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ECAPI.Models;
 
-public class ExpenseClass
+public class OrderClass
 {
     public int UserId { get; set; }
     public string Type { get; set; }
