@@ -44,7 +44,7 @@ public class CommerceService
             string query = $"insert into cart_item (CartId, AdvertisementId, Quantity) values (@CartId, @AdvertisementId, @Quantity);";
             string queryEqual = $"select count(id) from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
             string queryUpdate = $"update cart_item set Id = @Id, CartId = @CartId, AdvertisementId = @AdvertisementId, Quantity = @Quantity where CartId = @CartId and AdvertisementId = @AdvertisementId";
-
+            string queryqq = "select * from cart_item where CartId = 1 and AdvertisementId = 1;";
             CartItemClass cartItemDB = DataBase.Service.SqlReadCartItem(queryRead);
             AdvertisementClass ad = DataBase.Service.SqlReadAd(queryAd);
 
@@ -112,18 +112,30 @@ public class CommerceService
             Id = cartId
         };
         string queryTotal = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total FROM cart_item ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId;";
-        string queryBuy = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cart_item ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId group by StoreId;";
+        // faz o total do cart
+        string queryGetBalanceStore = $"SELECT COALESCE(SUM((a.Price - (a.Price * a.Discount / 100)) * ci.Quantity),0) AS Total,a.StoreId as StoreId FROM cart_item ci INNER JOIN advertisements a ON a.Id = ci.AdvertisementId WHERE ci.CartId = @CartId group by StoreId;";
+        //pega os valores que devem ir pra cada loja respectivamente de acordo com o carrinho
+        string querySetBalanceStore = "update stores set balance = @Balance where id = @OwnerId";
+        //aplica os devidos valores
         string queryClearCart = "delete from cart_item where CartId = @CartId";
+        //limpa o cart
         string queryRead = $"select UserId as Id,PhoneNumber from users u join cart c on c.UserId = u.Id where c.Id = {cartId}";
+        //bah sei la pra que eh isso,acho que e pra dar o telefone e o usuario certo pra registrar a order
+        System.Console.WriteLine("!");
+        List<StoreClass> list = DataBase.Service.sqlReadCart(queryGetBalanceStore,cartId);
+        System.Console.WriteLine("!");
+
+        foreach (StoreClass store in list)
+        {
+            DataBase.Service.NonSqlQueryClass(querySetBalanceStore,store);
+        }
+        System.Console.WriteLine("!");
 
         decimal Total = DataBase.Service.SqlScalarClass(queryTotal,cart);
-        //Console.WriteLine("1");
-        DataBase.Service.NonSqlQueryClass(queryBuy,cart);
-        //Console.WriteLine("2");
-        //Console.WriteLine("3");
-
+        System.Console.WriteLine("!");
         UserClass user = DataBase.Service.SqlReadUser2(queryRead);
-        //Console.WriteLine("4");
+        System.Console.WriteLine("!");
+
         OrderClass Order = new OrderClass()
         {
             UserId = user.Id,
@@ -133,10 +145,12 @@ public class CommerceService
             PhoneNumber = user.PhoneNumber,
             Date = DateTime.Now
         };
-        //Console.WriteLine("5");
+        System.Console.WriteLine("!");
         StoreService.StoreService.CreateOrder(Order);
-        //Console.WriteLine("6");
+        System.Console.WriteLine("!");
+
         DataBase.Service.NonSqlQueryClass(queryClearCart,cart);
+        System.Console.WriteLine("!");
         return Total;
     }
     public static void MakeReview(ReviewClass review)

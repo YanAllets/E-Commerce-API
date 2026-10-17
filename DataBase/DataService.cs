@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using ECAPI.Models;
 using MySqlConnector;
 
@@ -197,8 +198,26 @@ public class Service
         Config.conn.Close();
         return cartitem;
     }
-    public static void sqlReadValue(string query)
+    public static List<StoreClass> sqlReadCart(string query,int cartId)
     {
+
         MySqlCommand command = new MySqlCommand(query,Config.conn);
+        command.Parameters.AddWithValue("@CartId",cartId);
+
+        Config.conn.Open();
+
+        MySqlDataReader reader = command.ExecuteReader();
+        List<StoreClass> list = new List<StoreClass>();
+        StoreClass store = new StoreClass(); 
+        while (reader.Read())
+        {
+            store.Balance = Convert.ToDecimal(reader["Total"]);
+            store.OwnerId = Convert.ToInt32(reader["StoreId"]);
+            list.Add(store);
+        }
+
+        Config.conn.Close();
+
+        return list;
     }
 }
