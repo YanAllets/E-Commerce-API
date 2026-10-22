@@ -158,4 +158,9 @@ public class CommerceService
         string queryInsert = "insert into reviews (UserId, AdvertisementId, Rating, Comment, Date) values (@UserId, @AdvertisementId, @Rating, @Comment, @Date)";
         DataBase.Service.NonSqlQueryClass(queryInsert,review);
     }
+    public static void EditProfile(int userId,UserClass user)
+    {
+        string query = "update users set Id = @Id, Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, balance = @balance, Role = @Role where id = 1";
+        DataBase.Service.NonSqlQueryClass(query,user);
+    }
 }
