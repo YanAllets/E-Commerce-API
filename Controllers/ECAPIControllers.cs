@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ECAPI.Models;
 using ECAPI.CommerceService;
 using ECAPI.StoreService;
+using ECAPI.AccountService;
 namespace E_CommerceApi.Controllers;
 
 
@@ -81,5 +82,16 @@ public class ECAPIController : ControllerBase
     {
         CommerceService.MakeReview(review);
         return Ok();
+    }
+    [HttpPost("EditProfile")]
+    public IActionResult EditProfile(int UserId,UserClass user)
+    {
+        AccountService.EditProfile(UserId,user);
+        return Ok();
+    }
+    [HttpPost("ViewAccount")]
+    public IActionResult ViewAccount(int id)
+    {
+        return Ok(AccountService.ViewAccount(id));
     }
 }
