@@ -29,8 +29,7 @@ public class AccountService
     {
         if (ThisUserExist(userId))
         {
-        // NAO TA COMPLETO MT PELO CONTRARIO
-        string query = "update users set Id = @Id, Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, balance = @balance, Role = @Role where id = 1";
+        string query = "update users set Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, Balance = @Balance, Role = @Role where id = 1";
         Service.NonSqlQueryClass(query,user);
         return "Success";
         }

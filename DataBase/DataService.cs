@@ -27,6 +27,9 @@ public class Service
             command.Parameters.AddWithValue("@Adress",user.Adress);
             command.Parameters.AddWithValue("@PhoneNumber",user.PhoneNumber);
             command.Parameters.AddWithValue("@BirthDate",user.BirthDate);
+            command.Parameters.AddWithValue("@Balance",user.Balance);
+            command.Parameters.AddWithValue("@Role",user.Role);
+
         }else if (obj is ProductClass product)
         {
             command.Parameters.AddWithValue("@Name",product.Name);

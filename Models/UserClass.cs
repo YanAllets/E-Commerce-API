@@ -9,4 +9,6 @@ public class UserClass
     public string? Adress { get; set; }
     public string? PhoneNumber { get; set; }
     public DateTime BirthDate { get; set; }
+    public decimal Balance { get; set; }
+    public string Role  { get; set; }
 }
