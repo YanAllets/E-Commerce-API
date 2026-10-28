@@ -29,7 +29,7 @@ public class AccountService
     {
         if (ThisUserExist(userId))
         {
-        string query = "update users set Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, Balance = @Balance, Role = @Role where id = 1";
+        string query = $"update users set Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, Balance = @Balance, Role = @Role where id = {userId}";
         Service.NonSqlQueryClass(query,user);
         return "Success";
         }
