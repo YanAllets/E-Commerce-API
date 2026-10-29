@@ -20,7 +20,7 @@ public class Service
 
         if (obj is UserClass user)
         {
-            command.Parameters.AddWithValue("@id",user.Id);
+            command.Parameters.AddWithValue("@Id",user.Id);
             command.Parameters.AddWithValue("@Email",user.Email);
             command.Parameters.AddWithValue("@Name",user.Name);
             command.Parameters.AddWithValue("@Password",user.Password);
