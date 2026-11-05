@@ -11,16 +11,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {   
    // AQUI: configurações gerais do JWT Bearer]
-   byte[] securityKey = Encoding.UTF8.GetBytes("minha chave secreta");
-  SymmetricSecurityKey symmetricKey = new SymmetricSecurityKey(securityKey);
+    byte[] securityKey = Encoding.UTF8.GetBytes("minha chave secreta");
+    SymmetricSecurityKey symmetricKey = new SymmetricSecurityKey(securityKey);
+    
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        IssuerSigningKey = symmetricKey,
         // AQUI: regras específicas de validação do token
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true
     };
 });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
