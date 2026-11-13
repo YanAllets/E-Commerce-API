@@ -6,5 +6,10 @@ namespace ECAPi.AuthenticationService;
 
 public class JwtService
 {
-    
+    private readonly SymmetricSecurityKey _symmetricKey;
+
+    public JwtService(SymmetricSecurityKey symmetricKey)
+    {
+        _symmetricKey = symmetricKey;
+    }
 }
