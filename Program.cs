@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using ECAPi.AuthenticationService;
+using ECAPI.AccountService;
+using ECAPI.AuthenticationService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,6 +33,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 builder.Services.AddSingleton(symmetricKey);
 builder.Services.AddSingleton<JwtService>();
+builder.Services.AddScoped<AccountService>();
+//// Scoped cria uma instância por requisição HTTP.
 builder.Services.AddAuthorization();
 var app = builder.Build();
 

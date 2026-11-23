@@ -2,8 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ECAPi.AuthenticationService;
-
+namespace ECAPI.AuthenticationService;
 public class JwtService
 {
     private readonly SymmetricSecurityKey _symmetricKey;
@@ -17,6 +16,7 @@ public class JwtService
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+            //classe com instancia claim ja identificando o nome
         };
 
         var credentials = new SigningCredentials(_symmetricKey,SecurityAlgorithms.HmacSha256);

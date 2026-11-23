@@ -10,13 +10,25 @@ namespace E_CommerceApi.Controllers;
 [Route("api/[controller]")]
 public class ECAPIController : ControllerBase
 {
+    private readonly AccountService _accountService;
+    //ta chamando por instacia pq o safado nao vem se for cru na classe (readonly la de baixo das 
+    // classes subsequentes)
+
+    public ECAPIController(AccountService accountService)
+    {
+        _accountService = accountService;
+    }
     [HttpPost("Login")]
     public IActionResult LogIn(UserClass User)
     {
-        var result = CommerceService.LogIn(User);
+        var result = _accountService.LogIn(User);
         if (result.success == true && result.user != null)
         {
-            return Ok(result.user);
+            return Ok(new
+            {
+                user = result.user,
+                token = result.token
+            });
         }
         else if (result.success == false && result.user != null)
         {

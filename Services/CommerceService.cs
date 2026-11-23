@@ -5,31 +5,7 @@ using ECAPI.DataBase;
 namespace ECAPI.CommerceService;
 public class CommerceService
 {
-    public static (bool success,object user) LogIn(UserClass user)
-    {
-        string queryEmail = "select count(id) from users where Email = @Email;";
-        string queryPassword = "select count(id) from users where Email = @Email and Password = @Password;";
 
-        int success1 = Service.SqlScalarClass(queryEmail,user);
-        int success2 = Service.SqlScalarClass(queryPassword,user);
-        int success = success1 + success2;
-
-        if(success >= 1 )
-        {
-            if (success == 2)
-            {                
-                return (true,user);
-            }
-            else
-            {
-                return (false,user);
-            }
-        }
-        else
-        {
-            return (false,null);
-        }
-    }
     public static bool SingUp(UserClass user)
     {
         string query = "insert into users (Id, Email, Name, Password, Adress, PhoneNumber, BirthDate) Values (@Id, @Email, @Name, @Password, @Adress, @PhoneNumber, @BirthDate);";
