@@ -17,7 +17,9 @@ public class AccountService
     {
         string queryEmail = "select count(id) from users where Email = @Email;";
         string queryPassword = "select count(id) from users where Email = @Email and Password = @Password;";
+        string queryDatabaseId = "select id from users where Email = @Email and Password = @Password;";
 
+        int DataBaseId = Service.SqlScalarClass(queryDatabaseId,user);
         int success1 = Service.SqlScalarClass(queryEmail,user);
         int success2 = Service.SqlScalarClass(queryPassword,user);
         int success = success1 + success2;
@@ -26,7 +28,7 @@ public class AccountService
         {
             if (success == 2)
             {                
-                string token = _jwtService.GenerateToken(user.Id);
+                string token = _jwtService.GenerateToken(DataBaseId);
                 return (true,user,token);
             }
             else

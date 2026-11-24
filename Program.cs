@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-byte[] securityKey = Encoding.UTF8.GetBytes("minha chave secreta");
+byte[] securityKey = Encoding.UTF8.GetBytes("PUTAQUEPARIUQUECHAVESECRETADOCARALHOEUTOMARAQUEDEBOM");
 
 SymmetricSecurityKey symmetricKey = new SymmetricSecurityKey(securityKey);
 
