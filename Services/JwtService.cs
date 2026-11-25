@@ -13,6 +13,7 @@ public class JwtService
     }
     public string GenerateToken(int userId)
     {
+        // a ideia aqui e gerar e assinar o token
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString())
@@ -22,6 +23,8 @@ public class JwtService
         var credentials = new SigningCredentials(_symmetricKey,SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
+            issuer:"ECAPI",
+            audience:"ECAPI",
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials);

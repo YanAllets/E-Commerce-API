@@ -3,6 +3,8 @@ using ECAPI.Models;
 using ECAPI.CommerceService;
 using ECAPI.StoreService;
 using ECAPI.AccountService;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace E_CommerceApi.Controllers;
 
 
@@ -13,12 +15,12 @@ public class ECAPIController : ControllerBase
     private readonly AccountService _accountService;
     //ta chamando por instacia pq o safado nao vem se for cru na classe (readonly la de baixo das 
     // classes subsequentes)
-
     public ECAPIController(AccountService accountService)
     {
         _accountService = accountService;
     }
     [HttpPost("Login")]
+    [AllowAnonymous]
     public IActionResult LogIn(UserClass User)
     {
         var result = _accountService.LogIn(User);
@@ -42,24 +44,28 @@ public class ECAPIController : ControllerBase
     }
     
     [HttpPost("SingUp")]
+    [AllowAnonymous]
     public IActionResult CreateUser(UserClass User)
     {
         CommerceService.SingUp(User);
         return Ok("deu bom");
     }
     [HttpPost("CreateProduct")]
+    [Authorize]
     public IActionResult CreateProduct(ProductClass Product)
     {
         StoreService.CreateProduct(Product);
         return Ok("ok");
     }
     [HttpPost("CreateStore")]
+    [Authorize]
     public IActionResult CreateStore(StoreClass Store)
     {
         CommerceService.CreateStore(Store);
         return Ok("ok");
     }
     [HttpPost("CreateAd")]
+    [Authorize]
     public IActionResult CreateAd(AdvertisementClass Ad)
     {
         var result = StoreService.CreateAd(Ad);
@@ -73,34 +79,46 @@ public class ECAPIController : ControllerBase
         }
     }
     [HttpPost("AddToCart")]
+    [Authorize]
     public IActionResult AddToCart(int AdId,int quantity,int cartId)
     {
         CommerceService.AddToCart(AdId,quantity,cartId);
         return Ok();
     }
     [HttpPost("RemoveFromCart")]
+    [Authorize]
     public IActionResult RemoveFromCart(int AdId,int quantity,int cartId)
     {
         CommerceService.RemoveFromCart(quantity,cartId,AdId);
         return Ok();
     }
     [HttpPost("Buy")]
+    [Authorize]
     public IActionResult Buy(int cartId,string paymentMethod,int installments)
     {
         return Ok(CommerceService.Buy(cartId,paymentMethod,installments));
     }
     [HttpPost("MakeReview")]
+    [Authorize]
     public IActionResult MakeReview(ReviewClass review)
     {
         CommerceService.MakeReview(review);
         return Ok();
     }
     [HttpPost("ViewAccount")]
-    public IActionResult ViewAccount(int id)
+    [Authorize]
+    public IActionResult ViewAccount()
     {
-        return Ok(AccountService.ViewAccount(id));
+        string? idValue = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!int.TryParse(idValue, out int userId))
+        {
+            return Forbid();
+        }
+        return Ok(AccountService.ViewAccount(userId));
     }
     [HttpPost("EditProfile")]
+    [Authorize]
     public IActionResult EditProfile(int UserId,UserClass user)
     {
         return Ok(AccountService.EditProfile(UserId,user));
