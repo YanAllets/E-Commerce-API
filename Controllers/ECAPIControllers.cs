@@ -26,11 +26,7 @@ public class ECAPIController : ControllerBase
         var result = _accountService.LogIn(User);
         if (result.success == true && result.user != null)
         {
-            return Ok(new
-            {
-                user = result.user,
-                token = result.token
-            });
+            return Ok(result.token);
         }
         else if (result.success == false && result.user != null)
         {
@@ -119,8 +115,14 @@ public class ECAPIController : ControllerBase
     }
     [HttpPost("EditProfile")]
     [Authorize]
-    public IActionResult EditProfile(int UserId,UserClass user)
+    public IActionResult EditProfile(UserClass EditedUser)
     {
-        return Ok(AccountService.EditProfile(UserId,user));
+        string? id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!int.TryParse(id, out int UserId))
+        {
+            return Forbid();
+        }
+        return Ok(AccountService.EditProfile(UserId,EditedUser));
     }
 }

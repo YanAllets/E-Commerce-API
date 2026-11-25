@@ -60,12 +60,12 @@ public class AccountService
         UserClass user = Service.SqlReadUser(query);
         return user;
     }
-    public static string EditProfile(int userId,UserClass user)
+    public static string EditProfile(int userId,UserClass EditedUser)
     {
         if (ThisUserExist(userId))
         {
-        string query = $"update users set Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, Balance = @Balance, Role = @Role where id = {userId}";
-        Service.NonSqlQueryClass(query,user);
+        string queryUpdate = $"update users set Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, Balance = @Balance, Role = @Role where id = {userId}";
+        Service.NonSqlQueryClass(queryUpdate,EditedUser);
         return "Success";
         }
         else
