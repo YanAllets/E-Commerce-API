@@ -5,23 +5,20 @@ using ECAPI.DataBase;
 namespace ECAPI.CommerceService;
 public class CommerceService
 {
-
-    public static bool SingUp(UserClass user)
-    {
-        string query = "insert into users (Id, Email, Name, Password, Adress, PhoneNumber, BirthDate) Values (@Id, @Email, @Name, @Password, @Adress, @PhoneNumber, @BirthDate);";
-        Service.NonSqlQueryClass(query,user);
-        return true;
-    }
-    public static bool AddToCart(int AdId,int quantity,int cartId)
+    public static bool AddToCart(int AdId,int quantity,int UserId)
     {
         if (ThisExist(AdId))
         {
+            string queryFindCart = $"SELECT id FROM ecommerce.cart where UserId = {UserId};";
+            int cartId = Service.SqlScalar(queryFindCart);
+
             string queryAd = $"select * from advertisements where id = {AdId}";
             string queryRead = $"select * from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
             string query = $"insert into cart_item (CartId, AdvertisementId, Quantity) values (@CartId, @AdvertisementId, @Quantity);";
             string queryEqual = $"select count(id) from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
             string queryUpdate = $"update cart_item set Id = @Id, CartId = @CartId, AdvertisementId = @AdvertisementId, Quantity = @Quantity where CartId = @CartId and AdvertisementId = @AdvertisementId";
-            string queryqq = "select * from cart_item where CartId = 1 and AdvertisementId = 1;";
+
+
             CartItemClass cartItemDB = Service.SqlReadCartItem(queryRead);
             AdvertisementClass ad = Service.SqlReadAd(queryAd);
 

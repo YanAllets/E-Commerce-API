@@ -43,7 +43,7 @@ public class ECAPIController : ControllerBase
     [AllowAnonymous]
     public IActionResult CreateUser(UserClass User)
     {
-        CommerceService.SingUp(User);
+        _accountService.SingUp(User);
         return Ok("deu bom");
     }
     [HttpPost("CreateProduct")]
@@ -76,9 +76,15 @@ public class ECAPIController : ControllerBase
     }
     [HttpPost("AddToCart")]
     [Authorize]
-    public IActionResult AddToCart(int AdId,int quantity,int cartId)
+    public IActionResult AddToCart(int AdId,int quantity)
     {
-        CommerceService.AddToCart(AdId,quantity,cartId);
+        string? id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!int.TryParse(id, out int UserId))
+        {
+            return Forbid();
+        }
+        CommerceService.AddToCart(AdId,quantity,UserId);
         return Ok();
     }
     [HttpPost("RemoveFromCart")]
@@ -111,7 +117,7 @@ public class ECAPIController : ControllerBase
         {
             return Forbid();
         }
-        return Ok(AccountService.ViewAccount(userId));
+        return Ok(_accountService.ViewAccount(userId));
     }
     [HttpPost("EditProfile")]
     [Authorize]
@@ -123,6 +129,6 @@ public class ECAPIController : ControllerBase
         {
             return Forbid();
         }
-        return Ok(AccountService.EditProfile(UserId,EditedUser));
+        return Ok(_accountService.EditProfile(UserId,EditedUser));
     }
 }

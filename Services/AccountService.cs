@@ -41,6 +41,12 @@ public class AccountService
             return (false,null,null);
         }
     }
+    public bool SingUp(UserClass user)
+    {
+        string query = "insert into users (Id, Email, Name, Password, Adress, PhoneNumber, BirthDate) Values (@Id, @Email, @Name, @Password, @Adress, @PhoneNumber, @BirthDate);";
+        Service.NonSqlQueryClass(query,user);
+        return true;
+    }
     public static bool ThisUserExist(int id)
     {
         string query = $"select Count(id) from users where id = {id}";
@@ -54,17 +60,17 @@ public class AccountService
             return false;
         }
     }
-    public static UserClass ViewAccount(int id)
+    public UserClass ViewAccount(int id)
     {
-        string query = $"select * from users where Id = {id}";
+        string query = $"SELECT Id, Email, Name, Adress, PhoneNumber, BirthDate, Balance, Role FROM ecommerce.users where id = {id}";
         UserClass user = Service.SqlReadUser(query);
         return user;
     }
-    public static string EditProfile(int userId,UserClass EditedUser)
+    public string EditProfile(int userId,UserClass EditedUser)
     {
         if (ThisUserExist(userId))
         {
-        string queryUpdate = $"update users set Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate, Balance = @Balance, Role = @Role where id = {userId}";
+        string queryUpdate = $"update users set Email = @Email, Name = @Name, Password = @Password, Adress = @Adress, PhoneNumber = @PhoneNumber, BirthDate = @BirthDate where id = {userId}";
         Service.NonSqlQueryClass(queryUpdate,EditedUser);
         return "Success";
         }
