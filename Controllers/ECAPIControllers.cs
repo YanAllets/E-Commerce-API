@@ -84,14 +84,24 @@ public class ECAPIController : ControllerBase
         {
             return Forbid();
         }
-        CommerceService.AddToCart(AdId,quantity,UserId);
+        if (!CommerceService.AddToCart(AdId,quantity,UserId))
+        {
+            return NotFound();
+        }
         return Ok();
     }
     [HttpPost("RemoveFromCart")]
     [Authorize]
-    public IActionResult RemoveFromCart(int AdId,int quantity,int cartId)
+    public IActionResult RemoveFromCart(int AdId,int quantity)
     {
-        CommerceService.RemoveFromCart(quantity,cartId,AdId);
+        string? id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!int.TryParse(id, out int UserId))
+        {
+            return Forbid();
+        }
+    
+        CommerceService.RemoveFromCart(quantity,AdId,UserId);
         return Ok();
     }
     [HttpPost("Buy")]

@@ -11,12 +11,15 @@ public class CommerceService
         {
             string queryFindCart = $"SELECT id FROM ecommerce.cart where UserId = {UserId};";
             int cartId = Service.SqlScalar(queryFindCart);
-
+            if (cartId == 0)
+            {
+                return false;
+            }
             string queryAd = $"select * from advertisements where id = {AdId}";
             string queryRead = $"select * from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
             string query = $"insert into cart_item (CartId, AdvertisementId, Quantity) values (@CartId, @AdvertisementId, @Quantity);";
             string queryEqual = $"select count(id) from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
-            string queryUpdate = $"update cart_item set Id = @Id, CartId = @CartId, AdvertisementId = @AdvertisementId, Quantity = @Quantity where CartId = @CartId and AdvertisementId = @AdvertisementId";
+            string queryUpdate = $"update cart_item set CartId = @CartId, AdvertisementId = @AdvertisementId, Quantity = @Quantity where CartId = @CartId and AdvertisementId = @AdvertisementId";
 
 
             CartItemClass cartItemDB = Service.SqlReadCartItem(queryRead);
@@ -38,13 +41,20 @@ public class CommerceService
             else if(i == 1)
             {
                 Service.NonSqlQueryClass(queryUpdate,cartItemOutput);
-                return false;
+                return true;
             }
         }
         return false;
     }
-    public static void RemoveFromCart(int quantity,int cartId,int AdId)
+    public static bool RemoveFromCart(int quantity,int AdId,int UserId)
     {
+        string queryFindCart = $"SELECT id FROM ecommerce.cart where UserId = {UserId};";
+        int cartId = Service.SqlScalar(queryFindCart);
+        if (cartId == 0)
+        {
+            return false;
+        }
+
         string queryRead = $"select * from cart_item where CartId = {cartId} and AdvertisementId = {AdId};";
         string query = $"update cart_item set quantity = quantity - {quantity} where CartId = {cartId} and AdvertisementId = {AdId};";
         string queryDelete = $"DELETE FROM cart_item WHERE CartId = {cartId} and AdvertisementId = {AdId};";
@@ -59,6 +69,7 @@ public class CommerceService
         {
             Service.NonSqlQuery(query);
         }
+        return true;
     }
     public static bool CreateStore(StoreClass store)
     {

@@ -132,12 +132,12 @@ public class Service
         Config.conn.Open();
         UserClass user = new UserClass();
         MySqlDataReader reader = command.ExecuteReader();
+        // nao ta lendo a senha NAO ESQUECE
         while (reader.Read())
         {
             user.Id = Convert.ToInt32(reader["Id"]);
             user.Email = Convert.ToString(reader["Email"]);
             user.Name = Convert.ToString(reader["Name"]);
-            user.Password = Convert.ToString(reader["Password"]);
             user.Adress = Convert.ToString(reader["Adress"]);
             user.PhoneNumber = Convert.ToString(reader["PhoneNumber"]);
             user.BirthDate = Convert.ToDateTime(reader["BirthDate"]);
